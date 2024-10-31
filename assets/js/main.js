@@ -4,8 +4,8 @@ $(document).ready(function(){
     const BTN_CENTRAR = document.getElementById("Centrar");
     const BTN_SACAR = document.getElementById("Sacar");
     const BTN_PAD = document.querySelectorAll(".btn-pad");
-//    $(caja).attr("","");
-// $(contenido).css("bottom", "0");
+//  $(caja).attr("","");
+//  $(contenido).css("bottom", "0");
 
 /*     function movemodule( que_muevo, x_axis = 0, y_axis = 0 ){
         $(que_muevo).css("left", x_axis);

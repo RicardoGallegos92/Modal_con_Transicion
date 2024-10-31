@@ -6,7 +6,7 @@
     --TXT-CLR-CNTNT: black;
     --BRDR-CLR: rgb(255, 0, 0);
     --BRDR-CLR-CNTNT: rgb(0,0, 255);
-    --MRG-CAJA-Y: 20VH;
+    --MRG-CAJA-Y: 30VH;
     --MRG-CAJA-X: 30VW;
 }
 
@@ -36,10 +36,6 @@ body{
     width: 100%;
 }
 
-#pressme{
-    padding: .5rem 2rem;
-}
-
 .center{
     margin: 0 auto;
 }
@@ -62,8 +58,7 @@ body{
 
 button{
     z-index: 1;
-    height: 1.5rem;
-    width: 60px;
+    padding: .5rem 2rem;
 }
 
 .up{
@@ -104,16 +99,13 @@ button{
 }
 
 #imgLeft{
-    bottom: 10%;
     align-self: end;
 }
 
 #imgCenter{
-    top: 0;
     align-self: center;
 }
 
 #imgRight{
-    top: 0;
     align-self: start;
 }
