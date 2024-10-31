@@ -15,23 +15,23 @@ $(document).ready(function(){
 // así para editar el CSS - intercambiable con add/remove Class según sea necesario
     function moveanimado( que_muevo, x_axis = 0, y_axis = 0 ) {
         // se usan las coordenadas recibidas para iniciar una animacion de arrastre suave
-        //si no se reciben coordennadas en los parametros se vuelve al origen [0,0]
+        // si no se reciben coordenadas en los parametros se vuelve al origen [0,0]
         $(que_muevo).animate({
             left: x_axis,
             bottom: y_axis
         });
     }
     
-    function sacar_contenido( x , y){
+    function acciones_btn_pad( x , y){
         // se usan los parametros como coordenadas cartesianas X , Y
         moveanimado(contenido, x, y);
     }
 
     $(BTN_PAD).click(function(){
-        // al hacer click en el boton se extra la info en el tag "value" y se usan como parametros ded movimiento
+        // al hacer click en el boton se extrae la info en el tag "value" y se usan como parametros de movimiento
         let a = $(this)[0].value.split(" ");
         console.log(a[0], a[1]);
-        sacar_contenido(a[0], a[1]);
+        acciones_btn_pad(a[0], a[1]);
     });
 
 });

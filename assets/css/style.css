@@ -1,3 +1,6 @@
+/*
+:root para definir variables para el CSS
+*/
 :root{
     --BODY-CLR: green;
     --BGN-CLR : rgb(255, 255, 255);
@@ -6,8 +9,8 @@
     --TXT-CLR-CNTNT: black;
     --BRDR-CLR: rgb(255, 0, 0);
     --BRDR-CLR-CNTNT: rgb(0,0, 255);
-    --MRG-CAJA-Y: 30VH;
-    --MRG-CAJA-X: 30VW;
+    --MRG-CAJA-Y: 20%;
+    --MRG-CAJA-X: 25%;
 }
 
 body{
