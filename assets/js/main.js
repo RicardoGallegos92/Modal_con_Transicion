@@ -30,7 +30,7 @@ $(document).ready(function(){
     $(BTN_PAD).click(function(){
         // al hacer click en el boton se extrae la info en el tag "value" y se usan como parametros de movimiento
         let a = $(this)[0].value.split(" ");
-        console.log(a[0], a[1]);
+        // console.log(a[0], a[1]);
         acciones_btn_pad(a[0], a[1]);
     });
 

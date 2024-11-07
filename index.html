@@ -9,41 +9,50 @@
 	</head>
 
 	<body>
-		<div id="pad">
+		<div id="pad" class="center">
 			<!-- x,y -->
-			<button  id="uple" class="btn-pad" value="-100% 100%">
+			<button class="btn-pad" value="-100% 100%">
 				NW
 			</button>
-			<button id="up" class="btn-pad" value="0 100%">
+			<button class="btn-pad" value="0 100%">
 				N
 			</button>
-			<button  id="up" class="btn-pad" value="100% 100%">
+			<button class="btn-pad" value="100% 100%">
 				NE
 			</button>
-			<button id="left" class="btn-pad" value="-100% 0">
+			<button class="btn-pad" value="-100% 0">
 				W
 			</button>
-			<button id="Centrar" class="btn-pad" value="0 0">
+			<button class="btn-pad" value="0 0">
 				C
 			</button>
-			<button id="right" class="btn-pad" value="100% 0">
+			<button class="btn-pad" value="100% 0">
 				E
 			</button>
-			<button  id="up" class="btn-pad" value="-100% -100%">
+			<button class="btn-pad" value="-100% -100%">
 				SW
 			</button>
-			<button id="down" class="btn-pad" value="0 -100%">
+			<button class="btn-pad" value="0 -100%">
 				S
 			</button>
-			<button  id="up" class="btn-pad" value="100% -100%">
+			<button class="btn-pad" value="100% -100%">
 				SE
 			</button>
 		</div>
 		<section id="caja">
 			<div id="contenido" class="talk">
-				<div><img id="imgLeft" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRibusZDFo4NqLbD07lc0g2WiUaS5tqYX7w7rIodov2uln-NC4kKQNolxMnjTVr0VwE25k&usqp=CAU" alt="p1"></div>
-				<div><img id="imgCenter" src="https://png.pngtree.com/png-clipart/20220116/original/pngtree-cartoon-simple-bridge-matting-free-material-png-image_7109492.png" alt="gg"></div>
-				<div><img id="imgRight" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsjBA0ixoOYP9dx8RZa9nWyZ2kQG_C-VHY-o5SKPI4re6yh5UnuUc8OWMAHi4EU0nOKJo&usqp=CAU" alt="p2"></div>
+				<div id="imgLeft" class="center">
+					<p>oe Gantz</p>
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRibusZDFo4NqLbD07lc0g2WiUaS5tqYX7w7rIodov2uln-NC4kKQNolxMnjTVr0VwE25k&usqp=CAU" alt="p1">
+				</div>
+				<div id="imgCenter" class="center">
+					<canvas id="renderCanvas"></canvas>
+					<!-- <img src="https://png.pngtree.com/png-clipart/20220116/original/pngtree-cartoon-simple-bridge-matting-free-material-png-image_7109492.png" alt="gg"> -->
+				</div>
+				<div id="imgRight" class="center">
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsjBA0ixoOYP9dx8RZa9nWyZ2kQG_C-VHY-o5SKPI4re6yh5UnuUc8OWMAHi4EU0nOKJo&usqp=CAU" alt="p2">
+					<p>What Weá?!</p>
+				</div>
 			</div>
 		</section>
 	</body>
@@ -51,5 +60,8 @@
 		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
 		crossorigin="anonymous">
 	</script>
+	<script src="https://cdn.babylonjs.com/babylon.js"></script>
 	<script src="./assets/js/main.js"></script>
+	<script src="./assets/js/babylon.js"></script>
+
 </html>

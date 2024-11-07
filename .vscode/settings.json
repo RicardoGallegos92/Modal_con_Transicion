@@ -1,0 +1,12 @@
+{
+    "remote.portsAttributes": {
+
+        "443": {
+            "protocol": "https"
+        },
+        "8443": {
+            "protocol": "https"
+        }
+    },
+    "liveServer.settings.port": 5000
+}
