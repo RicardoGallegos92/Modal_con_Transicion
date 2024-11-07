@@ -1,5 +1,6 @@
 const canvas = document.getElementById("renderCanvas"); // Get the canvas element
 const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+
 const createScene = function () {
     // Creates a basic Babylon Scene object
     const scene = new BABYLON.Scene(engine);
