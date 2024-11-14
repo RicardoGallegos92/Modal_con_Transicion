@@ -22,7 +22,7 @@ const info_modelos = {
     },
     pikasaur : {
         nombre: "Pikasaur",
-        distacia_focal: 1000
+        distacia_focal: 800
     }
 }
 
@@ -65,24 +65,50 @@ let modelo = null;
 // Color de fondo ( R, G, B ) / R,G,B : [0,1]
 scene.clearColor = new BABYLON.Color3( 1, 0.5, 0 );
 
+// DEPRECATED, solo devuelve 0's
+function mostrarBoundingBox(infoDelModelo) {
+    const center = infoDelModelo.boundingBox.center;
+// Muestra el centro en consola
+    console.log("Centro del modelo:", center);
+// averiguar si tiene que ver con la exportación del modelo el por qué define todo en 0,0,0
+
+    const min = infoDelModelo.boundingBox.minimum; // Coordenadas mínimas
+    const max = infoDelModelo.boundingBox.maximum; // Coordenadas máximas
+    console.table("minimos:");
+    console.table(min);
+    console.table("maximos:");
+    console.table(max);
+}
+
+function centrarFocoCamara(boundingVectors) {
+    const min = boundingVectors.min; // Coordenadas mínimas
+    const max = boundingVectors.max; // Coordenadas máximas
+
+    console.table("minimos:");
+    console.table(min);
+    console.table("maximos:");
+    console.table(max);
+
+    const center = new BABYLON.Vector3(
+                                (min.x + max.x )/2,
+                                (min.y + max.y )/2,
+                                (min.z + max.z )/2
+                            );
+// Opcional: Ajustar la posición de la cámara al centro del modelo
+    camera.setTarget(center);
+}
+
 // cargar de modelo ASYNCrona
 BABYLON.SceneLoader.ImportMeshAsync("", "/assets/models/", modelo_en_uso.nombre+".gltf", scene)
-    .then((result) => {
-        // Asigna la primera malla cargada a la variable 'modelo'
-        modelo = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
+.then((result) => {
+    // Asigna la primera malla cargada a la variable 'modelo'
+    modelo = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
+    
+    modelo.computeWorldMatrix(true);
 
-        // Obtener información de los límites y calcular el centro
-        const boundingInfo = modelo.getBoundingInfo();
-        const center = boundingInfo.boundingBox.center;
-        console.log("dimensiones", boundingInfo.boundingBox.minimum);
-        console.log("dimensiones", boundingInfo.boundingBox.maximum);
+    // mostrarBoundingBox(modelo.getBoundingInfo());
 
-        // Muestra el centro en consola
-        // console.log("Centro del modelo:", center);
-        // averiguar si tiene que ver con la exportación del modelo el por qué define el centro en 0,0,0
-
-// Opcional: Ajustar la posición de la cámara al centro del modelo
-        //camera.setTarget(center);
+    centrarFocoCamara(modelo.getHierarchyBoundingVectors());
 
     })
     .catch((error) => {
