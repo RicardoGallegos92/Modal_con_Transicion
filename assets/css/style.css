@@ -30,13 +30,24 @@ body{
     overflow: hidden;
 }
 
-#pad{
+#pad.modal{
     display: grid;
     grid-template-columns:repeat(3,1fr);
     width: fit-content;
     >.btn-pad{
         z-index: 1;
         padding: .5rem 2rem;
+    }
+}
+
+.pj-player{
+    display: grid;
+    grid-template-columns:repeat(4,1fr);
+    gap: 1rem;
+    width: fit-content;
+    >.btn-pad{
+        z-index: 1;
+        padding: .1rem;
     }
 }
 

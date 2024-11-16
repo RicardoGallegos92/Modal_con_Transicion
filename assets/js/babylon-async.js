@@ -14,8 +14,22 @@ const camera = new BABYLON.ArcRotateCamera(
     new BABYLON.Vector3(0, 0, 0), // Objetivo
     scene                     // Escena
 );
+
+scene.animationGroups[x].play(true);
 */
 const info_modelos = {
+    orak: {
+        nombre: "orak",
+        distacia_focal: 5
+    },
+    zombie :{
+        nombre: "zombie",
+        distacia_focal: 75
+    },
+    boy :{
+        nombre: "boy",
+        distacia_focal: 250
+    },
     garlic : {
         nombre: "Garlic",
         distacia_focal: 40
@@ -26,8 +40,8 @@ const info_modelos = {
     }
 }
 
-const modelo_en_uso = info_modelos.garlic;
-//const modelo_en_uso = info_modelos.pikasaur;
+const modelo_en_uso = info_modelos.zombie;
+// const modelo_en_uso = info_modelos.orak;
 
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
@@ -65,6 +79,31 @@ let modelo = null;
 // Color de fondo ( R, G, B ) / R,G,B : [0,1]
 scene.clearColor = new BABYLON.Color3( 1, 0.5, 0 );
 
+function definirLapsoAnimaciones(animaciones) {
+    console.log("ANIMACIONES PRESENTES:");
+    let from_next = 0;
+    animaciones.forEach(animacion => {
+        animacion._from = from_next;
+        from_next = animacion._to;
+        console.table(
+            {
+                nombre : animacion.name,
+                inicio : animacion._from,
+                termino : animacion._to
+            }
+        );
+    });
+}
+
+function mostrarAnimacionesPresentes() {
+    /*
+    scene.animationGroups.forEach(animacion => {
+        console.log(animacion.name);
+    });
+    */
+    definirLapsoAnimaciones(scene.animationGroups);
+}
+
 // DEPRECATED, solo devuelve 0's
 function mostrarBoundingBox(infoDelModelo) {
     const center = infoDelModelo.boundingBox.center;
@@ -84,9 +123,10 @@ function centrarFocoCamara(boundingVectors) {
     const min = boundingVectors.min; // Coordenadas mínimas
     const max = boundingVectors.max; // Coordenadas máximas
 
-    console.table("minimos:");
+    console.log("MODELO 3D");
+    console.log("MINIMOS:");
     console.table(min);
-    console.table("maximos:");
+    console.log("MAXIMOS:");
     console.table(max);
 
     const center = new BABYLON.Vector3(
@@ -100,21 +140,22 @@ function centrarFocoCamara(boundingVectors) {
 
 // cargar de modelo ASYNCrona
 BABYLON.SceneLoader.ImportMeshAsync("", "/assets/models/", modelo_en_uso.nombre+".gltf", scene)
-.then((result) => {
-    // Asigna la primera malla cargada a la variable 'modelo'
-    modelo = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
-    
-    modelo.computeWorldMatrix(true);
+    .then((result) => {
+        // Asigna la primera malla cargada a la variable 'modelo'
+        modelo = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
+        
+        modelo.computeWorldMatrix(true);
 
-    // mostrarBoundingBox(modelo.getBoundingInfo());
+        // mostrarBoundingBox(modelo.getBoundingInfo());
 
-    centrarFocoCamara(modelo.getHierarchyBoundingVectors());
+        centrarFocoCamara(modelo.getHierarchyBoundingVectors());
 
-    })
-    .catch((error) => {
-        console.error("Error al cargar el modelo UnU:", error);
-    }
-);
+        mostrarAnimacionesPresentes();
+
+        })
+        .catch((error) => {
+            console.error("Error al cargar el modelo UnU:", error);
+        });
 
 engine.runRenderLoop(function() {
     scene.render();
