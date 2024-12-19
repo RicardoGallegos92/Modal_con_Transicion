@@ -1,7 +1,7 @@
 $(document).ready(function(){
     var INDEX_ANIMACION_ACTUAL = 0;
 
-    const animaciones = document.querySelectorAll(".animationStart");
+    const BTN_ANIMACION = document.querySelectorAll(".animationStart");
 
     function detenerAnimacion(animacion) {
         console.log("stop Animacion:", animacion.name);
@@ -20,7 +20,7 @@ $(document).ready(function(){
         INDEX_ANIMACION_ACTUAL = INDEX_ANIMACION_NUEVA;
     }
 
-    $(animaciones).click(function() {
+    $(BTN_ANIMACION).click(function() {
         cambiarAnimacion(this.value);
     });
 

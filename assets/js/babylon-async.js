@@ -40,8 +40,7 @@ const info_modelos = {
     }
 }
 
-const modelo_en_uso = info_modelos.zombie;
-// const modelo_en_uso = info_modelos.orak;
+const MODELO_EN_USO = info_modelos.zombie;
 
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
@@ -61,12 +60,12 @@ const camera = new BABYLON.ArcRotateCamera(
     "camera",
     Math.PI * 2/4,
     Math.PI * 1/2,
-    modelo_en_uso.distacia_focal,
+    MODELO_EN_USO.distacia_focal,
     BABYLON.Vector3(0,0,0),
     scene
 );
 // controles de la camara "true"-"false"
-camera.attachControl(canvas, true);
+camera.attachControl(canvas, false);
 
 // Agregar foco de luz
 const light = new BABYLON.HemisphericLight("light",
@@ -96,12 +95,9 @@ function definirLapsoAnimaciones(animaciones) {
 }
 
 function mostrarAnimacionesPresentes() {
-    /*
     scene.animationGroups.forEach(animacion => {
         console.log(animacion.name);
     });
-    */
-    definirLapsoAnimaciones(scene.animationGroups);
 }
 
 // DEPRECATED, solo devuelve 0's
@@ -139,7 +135,7 @@ function centrarFocoCamara(boundingVectors) {
 }
 
 // cargar de modelo ASYNCrona
-BABYLON.SceneLoader.ImportMeshAsync("", "/assets/models/", modelo_en_uso.nombre+".gltf", scene)
+BABYLON.SceneLoader.ImportMeshAsync("", "./assets/models/", MODELO_EN_USO.nombre+".gltf", scene)
     .then((result) => {
         // Asigna la primera malla cargada a la variable 'modelo'
         modelo = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
@@ -150,7 +146,9 @@ BABYLON.SceneLoader.ImportMeshAsync("", "/assets/models/", modelo_en_uso.nombre+
 
         centrarFocoCamara(modelo.getHierarchyBoundingVectors());
 
-        mostrarAnimacionesPresentes();
+        //mostrarAnimacionesPresentes();
+        
+        definirLapsoAnimaciones(scene.animationGroups);
 
         })
         .catch((error) => {
