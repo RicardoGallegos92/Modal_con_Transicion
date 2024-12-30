@@ -20,24 +20,32 @@ scene.animationGroups[x].play(true);
 const info_modelos = {
     orak: {
         nombre: "orak",
-        distacia_focal: 5
+        distacia_focal: 5,
+        animaciones : []
     },
     zombie :{
         nombre: "zombie",
-        distacia_focal: 75
-    },
-    boy :{
-        nombre: "boy",
-        distacia_focal: 250
+        distacia_focal: 75,
+        animaciones : []
     },
     garlic : {
         nombre: "Garlic",
-        distacia_focal: 40
+        distacia_focal: 40,
+        animaciones : []
     },
-    pikasaur : {
-        nombre: "Pikasaur",
-        distacia_focal: 800
+    oiiaCat : {
+        nombre: "oiiaCat",
+        distacia_focal: 5,
+        animaciones : []
     }
+/*
+    ,
+    boy :{
+        nombre: "boy",
+        distacia_focal: 250,
+        animaciones : []
+    }
+*/
 }
 
 const MODELO_EN_USO = info_modelos.zombie;
@@ -73,7 +81,7 @@ const light = new BABYLON.HemisphericLight("light",
                             scene);
 
 // Define la variable para almacenar el modelo
-let modelo = null;
+let MODELOS_PERSONAJES_CARGADOS = null;
 
 // Color de fondo ( R, G, B ) / R,G,B : [0,1]
 scene.clearColor = new BABYLON.Color3( 1, 0.5, 0 );
@@ -84,13 +92,14 @@ function definirLapsoAnimaciones(animaciones) {
     animaciones.forEach(animacion => {
         animacion._from = from_next;
         from_next = animacion._to;
-        console.table(
-            {
-                nombre : animacion.name,
-                inicio : animacion._from,
-                termino : animacion._to
-            }
-        );
+        let info_animacion = {
+            nombre : animacion.name,
+            inicio : animacion._from,
+            termino : animacion._to
+        }
+//        console.table( info_animacion );
+        //info_modelos
+        MODELO_EN_USO.animaciones.push(info_animacion);
     });
 }
 
@@ -118,13 +127,13 @@ function mostrarBoundingBox(infoDelModelo) {
 function centrarFocoCamara(boundingVectors) {
     const min = boundingVectors.min; // Coordenadas mínimas
     const max = boundingVectors.max; // Coordenadas máximas
-
+/*
     console.log("MODELO 3D");
     console.log("MINIMOS:");
     console.table(min);
     console.log("MAXIMOS:");
     console.table(max);
-
+*/
     const center = new BABYLON.Vector3(
                                 (min.x + max.x )/2,
                                 (min.y + max.y )/2,
@@ -134,34 +143,52 @@ function centrarFocoCamara(boundingVectors) {
     camera.setTarget(center);
 }
 
-// cargar de modelo ASYNCrona
-BABYLON.SceneLoader.ImportMeshAsync("", "./assets/models/", MODELO_EN_USO.nombre+".gltf", scene)
-    .then((result) => {
-        // Asigna la primera malla cargada a la variable 'modelo'
-        modelo = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
-        
-        modelo.computeWorldMatrix(true);
+function cargarPersonaje( modeloParaCargar ) {
+    // carga de modelo ASYNCrona
+    BABYLON.SceneLoader.ImportMeshAsync("", "./assets/models/", modeloParaCargar.nombre+".gltf", scene)
+        .then((result) => {
+            // Asigna la primera malla cargada a la variable 'modelo'
+            console.log("result.meshes");
+            console.log(result.meshes);
+            MODELOS_PERSONAJES_CARGADOS = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
+            console.log("MODELOS_PERSONAJES_CARGADOS");
+            console.log(MODELOS_PERSONAJES_CARGADOS);
+            MODELOS_PERSONAJES_CARGADOS.computeWorldMatrix(true);
 
-        // mostrarBoundingBox(modelo.getBoundingInfo());
+            // mostrarBoundingBox(modelo.getBoundingInfo());
 
-        centrarFocoCamara(modelo.getHierarchyBoundingVectors());
+            centrarFocoCamara(MODELOS_PERSONAJES_CARGADOS.getHierarchyBoundingVectors());
 
-        //mostrarAnimacionesPresentes();
-        
-        definirLapsoAnimaciones(scene.animationGroups);
+            //mostrarAnimacionesPresentes();
+            console.log("scene.animationGroups");
+            console.log(scene.animationGroups);
+            definirLapsoAnimaciones(scene.animationGroups);
 
-        })
+            })
         .catch((error) => {
             console.error("Error al cargar el modelo UnU:", error);
         });
+}
+
+function mostrarPersonajes() {
+    Object.keys(info_modelos).forEach( modelo => {
+    /*
+        console.log(modelo);
+        console.log(info_modelos[modelo]);
+    */
+        cargarPersonaje( info_modelos[modelo] );
+    });
+}
+
+mostrarPersonajes();
 
 engine.runRenderLoop(function() {
     scene.render();
-    console.log();
+    //console.log("scene Rendered");
 });
 
 // Ajustar el tamaño del canvas al redimensionar la ventana
 window.addEventListener('resize', function() {
-    // console.log("resized");
     engine.resize();
+    // console.log("resized");
 });
