@@ -143,6 +143,13 @@ function centrarFocoCamara(boundingVectors) {
     camera.setTarget(center);
 }
 
+function definirTamanoModelo(tamanoObjetivo) {
+    console.log("Escalanding");
+    //definir cuánto de la pantalla ocuparan en Vertical
+    let escala = tamanoObjetivo/tamanoModelo;
+    result.meshes[0].scaling = new BABYLON.Vector3(escala, escala, escala);
+}
+
 function cargarPersonaje( modeloParaCargar ) {
     // carga de modelo ASYNCrona
     BABYLON.SceneLoader.ImportMeshAsync("", "./assets/models/", modeloParaCargar.nombre+".gltf", scene)
@@ -156,6 +163,8 @@ function cargarPersonaje( modeloParaCargar ) {
             MODELOS_PERSONAJES_CARGADOS.computeWorldMatrix(true);
 
             // mostrarBoundingBox(modelo.getBoundingInfo());
+
+            definirTamanoModelo();
 
             centrarFocoCamara(MODELOS_PERSONAJES_CARGADOS.getHierarchyBoundingVectors());
 
@@ -172,12 +181,13 @@ function cargarPersonaje( modeloParaCargar ) {
 
 function mostrarPersonajes() {
     Object.keys(info_modelos).forEach( modelo => {
-    /*
+        /*
         console.log(modelo);
         console.log(info_modelos[modelo]);
-    */
+        */
         cargarPersonaje( info_modelos[modelo] );
     });
+   //cargarPersonaje( info_modelos.oiiaCat );
 }
 
 mostrarPersonajes();
