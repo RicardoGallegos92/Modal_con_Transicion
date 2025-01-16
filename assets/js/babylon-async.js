@@ -21,34 +21,33 @@ const info_modelos = {
     orak: {
         nombre: "orak",
         distacia_focal: 5,
-        animaciones : []
+        animaciones : [],
+        alturaVisual : 1.0,
+        alturaReal : null
     },
     zombie :{
         nombre: "zombie",
         distacia_focal: 75,
-        animaciones : []
+        animaciones : [],
+        alturaVisual : 1.0,
+        alturaReal : null
     },
     garlic : {
-        nombre: "Garlic",
+        nombre: "garlic",
         distacia_focal: 40,
-        animaciones : []
+        animaciones : [],
+        alturaVisual : 0.5,
+        alturaReal : null
     },
     oiiaCat : {
         nombre: "oiiaCat",
         distacia_focal: 5,
-        animaciones : []
+        animaciones : [],
+        alturaVisual : 0.2,
+        alturaReal : null
     }
-/*
-    ,
-    boy :{
-        nombre: "boy",
-        distacia_focal: 250,
-        animaciones : []
-    }
-*/
 }
-
-const MODELO_EN_USO = info_modelos.zombie;
+var posicionesPersonajes = [0,1,-1,2,-2,3,-3];
 
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
@@ -63,7 +62,7 @@ alrededor de un punto específico en la escena.
 Permite al usuario rotar la cámara horizontal y verticalmente
 alrededor de un objeto o punto de interés,
 manteniendo siempre el enfoque en ese objetivo.
-*/
+
 const camera = new BABYLON.ArcRotateCamera(
     "camera",
     Math.PI * 2/4,
@@ -72,6 +71,13 @@ const camera = new BABYLON.ArcRotateCamera(
     BABYLON.Vector3(0,0,0),
     scene
 );
+*/
+const camera = new BABYLON.FreeCamera(
+    "camaraLibre",
+    new BABYLON.Vector3(0, 10, -50),
+    scene
+);
+
 // controles de la camara "true"-"false"
 camera.attachControl(canvas, false);
 
@@ -80,14 +86,14 @@ const light = new BABYLON.HemisphericLight("light",
                             new BABYLON.Vector3(1, 1, 0), // de donde viene la luz
                             scene);
 
-// Define la variable para almacenar el modelo
-let MODELOS_PERSONAJES_CARGADOS = null;
-
 // Color de fondo ( R, G, B ) / R,G,B : [0,1]
 scene.clearColor = new BABYLON.Color3( 1, 0.5, 0 );
 
-function definirLapsoAnimaciones(animaciones) {
+function definirLapsoAnimaciones(animaciones, nombreModelo) {
+/*
     console.log("ANIMACIONES PRESENTES:");
+    console.log("Modelo: " + nombreModelo);
+*/
     let from_next = 0;
     animaciones.forEach(animacion => {
         animacion._from = from_next;
@@ -97,9 +103,9 @@ function definirLapsoAnimaciones(animaciones) {
             inicio : animacion._from,
             termino : animacion._to
         }
-//        console.table( info_animacion );
-        //info_modelos
-        MODELO_EN_USO.animaciones.push(info_animacion);
+        console.table( info_animacion );
+
+        info_modelos[nombreModelo].animaciones.push(info_animacion);
     });
 }
 
@@ -124,30 +130,47 @@ function mostrarBoundingBox(infoDelModelo) {
     console.table(max);
 }
 
-function centrarFocoCamara(boundingVectors) {
+function calcularAlturaModelo(modelo) {
+    let boundingVectors = modelo.getHierarchyBoundingVectors()
+    let min = boundingVectors.min.y; // Coordenadas mínimas
+    let max = boundingVectors.max.y; // Coordenadas máximas
+
+    info_modelos[modelo.name].alturaReal = Math.abs( max - min);
+}
+
+function centrarFocoCamara(modelo) {
+    let boundingVectors = modelo.getHierarchyBoundingVectors()
     const min = boundingVectors.min; // Coordenadas mínimas
     const max = boundingVectors.max; // Coordenadas máximas
 /*
     console.log("MODELO 3D");
-    console.log("MINIMOS:");
-    console.table(min);
     console.log("MAXIMOS:");
     console.table(max);
+    console.log("MINIMOS:");
+    console.table(min);
 */
     const center = new BABYLON.Vector3(
-                                (min.x + max.x )/2,
-                                (min.y + max.y )/2,
-                                (min.z + max.z )/2
+                                ( min.x + max.x )/2,
+                                ( min.y + max.y )/2,
+                                ( min.z + max.z )/2
                             );
 // Opcional: Ajustar la posición de la cámara al centro del modelo
     camera.setTarget(center);
 }
 
-function definirTamanoModelo(tamanoObjetivo) {
-    console.log("Escalanding");
-    //definir cuánto de la pantalla ocuparan en Vertical
-    let escala = tamanoObjetivo/tamanoModelo;
-    result.meshes[0].scaling = new BABYLON.Vector3(escala, escala, escala);
+function definirTamanoModelo( nombreModelo, alturaObjetiva) {
+    //scene.meshes[0].scaling = new BABYLON.Vector3(escala, escala, escala);
+
+    for( index = 0; index < scene.meshes.length; index++ ) {
+        //console.log(scene.meshes[index]);
+        if ( scene.meshes[index].name == nombreModelo ){
+            //definir cuánto de la pantalla ocuparan en Vertical
+            let escala = (alturaObjetiva / info_modelos[nombreModelo].alturaReal) * info_modelos[nombreModelo].alturaVisual;
+//            console.log(`Escalanding a escala ${escala}`);
+            scene.meshes[index].scaling = new BABYLON.Vector3(escala, escala, escala);
+            return;
+        }
+    }
 }
 
 function cargarPersonaje( modeloParaCargar ) {
@@ -155,23 +178,16 @@ function cargarPersonaje( modeloParaCargar ) {
     BABYLON.SceneLoader.ImportMeshAsync("", "./assets/models/", modeloParaCargar.nombre+".gltf", scene)
         .then((result) => {
             // Asigna la primera malla cargada a la variable 'modelo'
-            console.log("result.meshes");
-            console.log(result.meshes);
-            MODELOS_PERSONAJES_CARGADOS = result.meshes[0]; // Puedes ajustar el índice si hay múltiples mallas
-            console.log("MODELOS_PERSONAJES_CARGADOS");
-            console.log(MODELOS_PERSONAJES_CARGADOS);
-            MODELOS_PERSONAJES_CARGADOS.computeWorldMatrix(true);
+            result.meshes[0].computeWorldMatrix(true);
+            result.meshes[0].name = modeloParaCargar.nombre;
+            result.meshes[0].position.x = 10 * posicionesPersonajes.shift();
 
-            // mostrarBoundingBox(modelo.getBoundingInfo());
+            //centrarFocoCamara(result.meshes[0]);
+            calcularAlturaModelo(result.meshes[0]);
 
-            definirTamanoModelo();
-
-            centrarFocoCamara(MODELOS_PERSONAJES_CARGADOS.getHierarchyBoundingVectors());
-
-            //mostrarAnimacionesPresentes();
             console.log("scene.animationGroups");
             console.log(scene.animationGroups);
-            definirLapsoAnimaciones(scene.animationGroups);
+            definirLapsoAnimaciones(result.meshes[0]._scene.animationGroups, modeloParaCargar.nombre);
 
             })
         .catch((error) => {
@@ -179,18 +195,29 @@ function cargarPersonaje( modeloParaCargar ) {
         });
 }
 
-function mostrarPersonajes() {
-    Object.keys(info_modelos).forEach( modelo => {
-        /*
-        console.log(modelo);
-        console.log(info_modelos[modelo]);
-        */
-        cargarPersonaje( info_modelos[modelo] );
-    });
-   //cargarPersonaje( info_modelos.oiiaCat );
+function mayorAlturaModelos( ) {
+    let mayorAltura = 0.0;
+    Object.values(info_modelos).forEach( modelo => {
+        if ( modelo.alturaReal > mayorAltura ){
+            mayorAltura = modelo.alturaReal;
+        }
+    } );
+    return mayorAltura;
 }
 
-mostrarPersonajes();
+function normalizarAlturas() {
+    let alturaObjetiva = mayorAlturaModelos( );
+    Object.values(info_modelos).forEach( modelo => {
+        definirTamanoModelo( modelo.nombre, alturaObjetiva );
+    } );
+}
+
+function mostrarPersonajes() {
+    Object.values(info_modelos).forEach( modelo => {
+        cargarPersonaje( modelo );
+    });
+    //normalizarAlturas();
+}
 
 engine.runRenderLoop(function() {
     scene.render();
@@ -202,3 +229,5 @@ window.addEventListener('resize', function() {
     engine.resize();
     // console.log("resized");
 });
+
+mostrarPersonajes().normalizarAlturas();
