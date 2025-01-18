@@ -1,9 +1,9 @@
 $(document).ready(function(){
     // Aquí definimos que vamos a detectar las teclas presionadas
     var ESTA_MOVIENDOSE = false;
-    scene.actionManager = new BABYLON.ActionManager(scene);
+    SCENE.actionManager = new BABYLON.ActionManager(SCENE);
 /*
-    scene.actionManager.registerAction(
+    SCENE.actionManager.registerAction(
 // El uso de "parameter" nos permite detectar una tecla específica
 // y asignarle una funcion
         new BABYLON.ExecuteCodeAction(
@@ -41,7 +41,7 @@ $(document).ready(function(){
         }
     }
 
-    scene.actionManager.registerAction(
+    SCENE.actionManager.registerAction(
     // Detectar cualquier tecla presionada en el teclado
         new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnKeyUpTrigger,
@@ -56,7 +56,7 @@ $(document).ready(function(){
         )
     );
 
-    scene.actionManager.registerAction(
+    SCENE.actionManager.registerAction(
     // Detectar cualquier tecla al soltarla
         new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnKeyDownTrigger,
